@@ -16,27 +16,52 @@ var content = document.querySelector("#quiz-box");
 var iteration = 0;
 
 //removes current content in quiz-box
-function removeContent(content){
+function removeContent(){
     while(content.firstChild){
         content.removeChild(content.firstChild);
     }
+
 }
 
 //populate quiz-box with multiple choice questions
-function generateQuestion(i) {
-    var questionNumber = i;
+function generateQuestion() {
+    var questionNumber = iteration;
     removeContent(content);
-    var questionRow = $("#quiz-box").append("<p>"+i+"</p>");
+    // var layout = $('<div id="container">');
+    // $("#quiz-box").append(layout);
+    
+    var questionPrompt = $('<h2>'+questions[questionNumber].question+'</h2>');
+    $("#quiz-box").append(questionPrompt);
+
+
+    var questionChoices = $('<div class="choices">');
+    $("#quiz-box").append(questionChoices);
+
+    for (n=0;n<questions[questionNumber].choices.length;n++){
+        var radioBtn = $('<input type="radio" name="question-choice" id="q'+questionNumber+'">');
+        var questionText = $('<label for="q'+questionNumber+'">'+questions[questionNumber].choices[n]+'</label>');
+        $(".choices").append(radioBtn,questionText);
+
+    }
+
+
     iteration++;
+    // var questionRow = $("#quiz-box").append("<p>"+i+"</p>");
+    // var question = $('<div class="prompt">');
+    // $("#quiz-box").append(question);
+
 }
 
 //reset quiz
+function reset() {
+    iteration = 0;
+}
 
 
 //start quiz
 function startQuiz(){
     if (iteration<questions.length){
-        generateQuestion(iteration);
+        generateQuestion();
     }
 }
 
