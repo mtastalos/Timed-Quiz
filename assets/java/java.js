@@ -1,19 +1,20 @@
 //array of question objects
 var questions =[
-    {question:"This is the question 1 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1},
-    {question:"This is the question 2 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1},
-    {question:"This is the question 3 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1},
-    {question:"This is the question 4 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1},
-    {question:"This is the question 5 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1},
-    {question:"This is the question 6 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1},
-    {question:"This is the question 7 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1},
-    {question:"This is the question 8 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1},
-    {question:"This is the question 9 text", choices:["Option1", "Option2", "Option3", "Option4"], anwer:1}
+    {question:"This is the question 1 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
+    {question:"This is the question 2 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
+    {question:"This is the question 3 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
+    {question:"This is the question 4 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
+    {question:"This is the question 5 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
+    {question:"This is the question 6 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
+    {question:"This is the question 7 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
+    {question:"This is the question 8 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
+    {question:"This is the question 9 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1}
 ];
 
 var content = document.querySelector("#quiz-box");
 //question iteration 
 var iteration = 0;
+var score = 0;
 
 //removes current content in quiz-box
 function removeContent(){
@@ -25,44 +26,56 @@ function removeContent(){
 
 //populate quiz-box with multiple choice questions
 function generateQuestion() {
-    var questionNumber = iteration;
-    removeContent(content);
-    // var layout = $('<div id="container">');
-    // $("#quiz-box").append(layout);
-    
-    var questionPrompt = $('<h2>'+questions[questionNumber].question+'</h2>');
-    $("#quiz-box").append(questionPrompt);
+    if(iteration<questions.length){
+        var questionNumber = iteration;
+        removeContent(content);
+        
+        var questionPrompt = $('<h2>'+questions[questionNumber].question+'</h2>');
+        $('#quiz-box').append(questionPrompt);
 
 
-    var questionChoices = $('<div class="choices">');
-    $("#quiz-box").append(questionChoices);
+        var questionChoices = $('<div class="choices">');
+        $("#quiz-box").append(questionChoices);
 
-    for (n=0;n<questions[questionNumber].choices.length;n++){
-        var radioBtn = $('<input type="radio" name="question-choice" id="q'+questionNumber+'">');
-        var questionText = $('<label for="q'+questionNumber+'">'+questions[questionNumber].choices[n]+'</label>');
-        $(".choices").append(radioBtn,questionText);
-
+        for (n=0;n<questions[questionNumber].choices.length;n++){
+            var questionBtn = $('<button class="choice-option">'+questions[questionNumber].choices[n]+'</button>');
+            questionBtn.attr('data-question-option',n);
+            $(".choices").append(questionBtn);
+        }
+        iteration++;
     }
-
-
-    iteration++;
-    // var questionRow = $("#quiz-box").append("<p>"+i+"</p>");
-    // var question = $('<div class="prompt">');
-    // $("#quiz-box").append(question);
-
 }
 
-//reset quiz
+//question option click event
+$("#quiz-box").on('click', '.choice-option' , function(event) {
+    event.preventDefault();
+    var selectedAnswer = $(this).attr('data-question-option');
+    var correctAnwser = questions[iteration].answer;
+    var resultContainer = $('<div class="answer-result">')
+    var result = $('<p>');
+    if (selectedAnswer == correctAnwser) {
+        result.text('Correct!');
+        score++;
+    }
+    else {
+        result.text('Wrong...');
+    }
+    removeContent();
+    generateQuestion();
+    $("#quiz-box").append(resultContainer.append(result));
+});
+
+//reset quiz ------------ combined with start, if not nessessary
 function reset() {
     iteration = 0;
+    score = 0;
 }
 
 
 //start quiz
 function startQuiz(){
-    if (iteration<questions.length){
-        generateQuestion();
-    }
+    reset();
+    generateQuestion();
 }
 
 
