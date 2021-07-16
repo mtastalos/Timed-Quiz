@@ -18,15 +18,34 @@ var content = document.querySelector("#quiz-box");
 var iteration = 0;
 var score = 0;
 
-//removes current content in quiz-box
-function removeContent(){
-    while(content.firstChild){
-        content.removeChild(content.firstChild);
-    }
-
+//create homePage
+function homePage() {
+    reset();
+    var homeScreen = $(
+        '<h2>Coding Quiz Challenge</h2>'+
+        '<p>You are about to start a timed quiz that will have question coding related!</p>'+
+        '<button class="start">Start Quiz!</button>'
+        );
+    $("#quiz-box").append(homeScreen);
 }
 
-//populate quiz-box with multiple choice questions
+//Results page
+function resultsPage() {
+    var finalScore = Math.round((score/questions.length)*100)
+    var resultScreen = $(
+        '<h3>All Done!</h3>'+
+        '<p>Your final score is '+finalScore+'.</p>'+
+        '<p>'+
+            '<label for="initials">Enter in initials to your record score:</label>'+
+            '<input type="text" name="initials" id="initials" placeholder="AAA"/>'+
+            '<button class="submit">Submit</button>'+
+        '</p>'
+        );
+    $("#quiz-box").append(resultScreen);
+}
+
+
+//populate a div inside the form with multiple choice questions
 function generateQuestion() {
     if(iteration<questions.length){
         removeContent();
@@ -45,7 +64,13 @@ function generateQuestion() {
     }
 }
 
-//question option click event
+//start button click event
+$("#quiz-box").on('click', '.start' , function(event) {
+    event.preventDefault();   
+    generateQuestion();
+});
+
+//question answer button click event
 $("#quiz-box").on('click', '.choice-option' , function(event) {
     event.preventDefault();   
     //creates containers for results
@@ -75,20 +100,14 @@ $("#quiz-box").on('click', '.choice-option' , function(event) {
     $("#quiz-box").append(resultContainer.append(result));  
 });
 
-//Results page
-function resultsPage() {
-    var finalScore = Math.round((score/questions.length)*100)
-    var resultScreen = $(
-        '<h3>All Done!</h3>'+
-        '<p>Your final score is '+finalScore+'.</p>'+
-        '<label for="initials">Enter in initials to your record score:</label>'+
-        '<input type="text" name="initials" id="initials" placeholder="AAA"/>'+
-        '<button class="submit">Submit</button>'
-        );
-    $("#quiz-box").append(resultScreen);
+
+//removes current content in quiz-box
+function removeContent(){
+    while(content.firstChild){
+        content.removeChild(content.firstChild);
+    }
 
 }
-
 
 //reset quiz ------------ combined with start, if not nessessary
 function reset() {
@@ -96,16 +115,4 @@ function reset() {
     score = 0;
 }
 
-
-//start quiz
-function startQuiz(){
-    reset();
-    generateQuestion();
-}
-
-
-
-
-//populate quiz-box with total and allow test taker to enter name in to save score 
-
-//populate quiz-box with score screen  
+homePage();
