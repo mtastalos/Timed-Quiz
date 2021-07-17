@@ -17,6 +17,8 @@ var content = document.querySelector("#quiz-box");
 //question iteration 
 var iteration = 0;
 var score = 0;
+var time =0;
+let timer;
 
 //create homePage
 function homePage() {
@@ -44,6 +46,23 @@ function resultsPage() {
     $("#quiz-box").append(resultScreen);
 }
 
+//timer controller
+function countDown(controller){
+    console.log(controller);
+    if(controller=="start"){
+        timer = setInterval(function(){
+            time++;
+            $('.timer').html('Time: '+time);
+        }, 1000);
+    }
+    else if (controller=="stop"){
+        clearInterval(timer);
+    }
+}
+
+
+
+
 
 //populate a div inside the form with multiple choice questions
 function generateQuestion() {
@@ -65,6 +84,7 @@ function generateQuestion() {
 $("#quiz-box").on('click', '.start' , function(event) {
     event.preventDefault();   
     generateQuestion();
+    countDown('start');
 });
 
 //question answer button click event
