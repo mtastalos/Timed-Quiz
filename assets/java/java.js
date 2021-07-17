@@ -49,17 +49,14 @@ function resultsPage() {
 function generateQuestion() {
     if(iteration<questions.length){
         removeContent();
-        var questionPrompt = $('<h2>'+questions[iteration].question+'</h2>');
-        $('#quiz-box').append(questionPrompt);
-
-
-        var questionChoices = $('<div class="choices">');
-        $("#quiz-box").append(questionChoices);
+        var questionPrompt = $('<h2>'+questions[iteration].question+'</h2>');;
+        var questionChoices = $('<div class="choices-container">');
+        $("#quiz-box").append($('<div class="choices-container">').append(questionPrompt));
 
         for (n=0;n<questions[iteration].choices.length;n++){
             var questionBtn = $('<button class="choice-option">'+questions[iteration].choices[n]+'</button>');
             questionBtn.attr('data-question-option',n);
-            $(".choices").append(questionBtn);
+            $(".choices-container").append(questionBtn);
         }
     }
 }
@@ -95,9 +92,12 @@ $("#quiz-box").on('click', '.choice-option' , function(event) {
         removeContent();
         resultsPage();
     }
+    console.log($('.answer-result').length)
+    
+    if ($('.answer-result').length != 0){$('.answer-result').remove();}
 
     //adds created content to form
-    $("#quiz-box").append(resultContainer.append(result));  
+    $(".quiz-container").append(resultContainer.append(result));  
 });
 
 
