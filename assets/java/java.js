@@ -10,7 +10,6 @@ var questions =[
     {question:"This is the question 8 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
     {question:"This is the question 9 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
     {question:"This is the question 10 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1}
-
 ];
 
 var content = document.querySelector("#quiz-box");
@@ -21,13 +20,29 @@ var time =75;
 let timer;
 var highscores = [];
 
+//Home Page
+function homePage() {
+    displayHighscoreLink(true);
+    countDown('reset');
+    $('.answer-result').remove();
+    iteration = 0;
+    score = 0;
+    var homeScreen = $(
+        '<h2>Coding Quiz Challenge</h2>'+
+        '<p>You are about to start a timed quiz that will have question coding related!</p>'+
+        '<button class="start">Start Quiz!</button>'
+        );
+    $("#quiz-box").append(homeScreen);
+}
+
 //High scores (link in head)
 function displayHighscoreLink(display){
-    if (display===true){
+    if (display){
         $('.highscore').text('View High Scores');
     }
-    else if (display===false)
+    else {
         $('.highscore').text('');
+    }
 }
 
 //Count down (timer)
@@ -41,21 +56,20 @@ function countDown(controller){
     else if (controller=="stop"){
         clearInterval(timer);
     }
+    else if (controller=='reset'){
+        $('.timer').html('Time: 0');
+    }
     else if (controller=="clear"){
         $('.timer').html('');
     }
 }
 
-//Home Page
-function homePage() {
-    displayHighscoreLink(true);
-    reset();
-    var homeScreen = $(
-        '<h2>Coding Quiz Challenge</h2>'+
-        '<p>You are about to start a timed quiz that will have question coding related!</p>'+
-        '<button class="start">Start Quiz!</button>'
-        );
-    $("#quiz-box").append(homeScreen);
+//removes current content in quiz-box
+function removeContent(){
+    while(content.firstChild){
+        content.removeChild(content.firstChild);
+    }
+
 }
 
 //Question page
@@ -167,7 +181,7 @@ $("#quiz-box").on('click', '.choice-option' , function(event) {
         resultsPage();
     }    
     //inplace to avoid error, can't delete something that doesn't exist
-    if ($('.answer-result').length != 0){$('.answer-result').remove();}
+    $('.answer-result').remove();
     //adds created content to form
     $(".quiz-container").append(resultContainer.append(result));  
 });
@@ -176,21 +190,21 @@ $("#quiz-box").on('click', '.choice-option' , function(event) {
 $('#header').on('click', '.highscore' , function(event) {
     event.preventDefault();
     displayHighscoreLink(false);
+    $('.answer-result').remove();
+    countDown("stop");
     HighScoreBoard();
 });
 
-//removes current content in quiz-box
-function removeContent(){
-    while(content.firstChild){
-        content.removeChild(content.firstChild);
-    }
+$('#quiz-box').on('click', '.go-back' , function(event) {
+    event.preventDefault();
+    removeContent()
+    homePage();
+});
 
-}
+$('#quiz-box').on('click', '.clear-highscores' , function(event) {
+    event.preventDefault();
+    localStorage.clear();
+    HighScoreBoard();
 
-//reset quiz ------------ combined with start, if not nessessary
-function reset() {
-    iteration = 0;
-    score = 0;
-}
-
+});
 homePage();
