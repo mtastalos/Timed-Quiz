@@ -8,28 +8,27 @@ var questions =[
     {question:"Which element would you use to implement JavaScript into your HTML from an external JS file?", choices:["&lt;link&gt", "&lt;source&gt", "&lt;script&gt", "All the above"], answer:2},
     {question:"Which element can you write text in?", choices:["&lt;div&gt", "&lt;h1&gt", "&lt;p&gt", "All the above"], answer:3},
     {question:"To change the text found on the browser's tab, which element would you use?", choices:["&lt;head&gt", "&lt;header&gt", "&lt;title&gt", "&lt;name&gt"], answer:2},
-    {question:"CSS or Cascading Style Sheets will execute from ____", choices:["Top to bottom", "Right to left", "Left to right", "None of the above"], answer:0},
-    {question:"'*', '=', '+', and '-' are examples of ____ in JavaScript", choices:["Operators", "Math", "Characters", "Symbols"], answer:0},
-    {question:"for(i=0;i<=10;i++){console.log('i') \n What will the console display}", choices:["It will display i incrementally number 9 times", "Run into an error", "It will display the same number 10 times", "It will display i incrementally number 10 times"], answer:3}
+    {question:"CSS or Cascading Style Sheets will execute from ____.", choices:["Top to bottom", "Right to left", "Left to right", "None of the above"], answer:0},
+    {question:"'*', '=', '+', and '-' are examples of ____ in JavaScript.", choices:["Operators", "Math", "Characters", "Symbols"], answer:0},
+    {question:"for(i=0;i<=10;i++){console.log('i')}    What will the console display?", choices:["It will display i incrementally number 9 times", "Run into an error", "It will display the same number 10 times", "It will display i incrementally 10 times"], answer:3}
 ];
 
 var content = document.querySelector("#quiz-box");
 //question iteration 
 var iteration = 0;
 var score = 0;
-var time =75;
+var time = 90;
 let timer;
 var highscores = [];
+var loop = true;
 
 //Home Page
 function homePage() {
     displayHighscoreLink(true);
     countDown('reset');
     $('.answer-result').remove();
-    iteration = 0;
-    score = 0;
     var homeScreen = $(
-        '<h2>Coding Quiz Challenge</h2>'+
+        '<h1>Coding Quiz Challenge</h1>'+
         '<p>You are about to start a timed quiz that will have question coding related!</p>'+
         '<button class="start">Start Quiz!</button>'
         );
@@ -50,11 +49,31 @@ function displayHighscoreLink(display){
 function countDown(controller){
     if(controller=="start"){
         timer = setInterval(function(){
+            if(time<0){
+                removeContent();
+                resultsPage();
+                window.alert("BZZZZz! You ran out of time!");
+                clearInterval(timer);
+            }
+            else{
+                $('.timer').html('Time: '+time);
+            }
             time--;
-            $('.timer').html('Time: '+time);
         }, 1000);
     }
-    else if (controller=="stop"){
+    else if (controller=='minus'){
+        time-=10;
+        if(time<0){
+            removeContent();
+            resultsPage();
+            window.alert("BZZZZ! All those wrong questions ate up all your time!");
+            clearInterval(timer);
+            $('.timer').html('Time: 0');
+            return loop=false;
+        }
+        $('.timer').html('Time: '+time);
+    }
+    else if (controller=='stop'){
         clearInterval(timer);
     }
     else if (controller=='reset'){
@@ -74,30 +93,33 @@ function removeContent(){
 }
 
 //Question page
-function generateQuestion() {
-    if(iteration<questions.length){
-        removeContent();
-        var questionPrompt = $('<h3>'+questions[iteration].question+'</h3>');;
-        var questionChoices = $('<div class="choices-container">');
-        $("#quiz-box").append(questionChoices.append(questionPrompt));
-
-        for (n=0;n<questions[iteration].choices.length;n++){
-            var questionBtn = $('<button class="choice-option">'+questions[iteration].choices[n]+'</button>');
-            questionBtn.attr('data-question-option',n);
-            $(".choices-container").append(questionBtn);
+function generateQuestion(loop) {
+    if (loop){
+        if(iteration<questions.length){
+            removeContent();
+            var questionPrompt = $('<h2>'+questions[iteration].question+'</h2>');;
+            var questionChoices = $('<div class="choices-container">');
+            $("#quiz-box").append(questionChoices.append(questionPrompt));
+    
+            for (n=0;n<questions[iteration].choices.length;n++){
+                var questionBtn = $('<button class="choice-option">'+questions[iteration].choices[n]+'</button>');
+                questionBtn.attr('data-question-option',n);
+                $(".choices-container").append(questionBtn);
+            }
         }
     }
+    
 }
 
 //Results page
 function resultsPage() {
     var finalScore = Math.round((score/questions.length)*100)
     var resultScreen = $(
-        '<h4>All Done!</h4>'+
+        '<h3>Results!</h3>'+
         '<p>Your final score is '+finalScore+'.</p>'+
         '<p>'+
-            '<label for="initials">Enter in initials to your record score:</label>'+
-            '<input type="text" name="initials" id="initials" placeholder="AAA"/>'+
+            '<label for="initials">Enter in initials to record your score: </label>'+
+            '<input type="text" name="initials" id="initials" placeholder="AAA" size="3" style="text-align:center;"/>'+
             '<button class="submit">Submit</button>'+
         '</p>'
         );
@@ -110,12 +132,16 @@ function HighScoreBoard() {
     countDown('clear');
     displayHighscoreLink(false);
     var scoreBoard = $('<div class="scoreboard">');
-    var scoreBoardTitle = $('<h5 class="scoreboardTitle">').text('High Scores');
+    var scoreBoardTitle = $('<h4 class="scoreboardTitle">').text('High Scores');
     if(localStorage.getItem('scores')!=null){
         storageArr = JSON.parse(localStorage.getItem('scores'));
-        storageArr.forEach(function(item) {
-            var stats = $('<p>').text('. '+item.userInitial+' - '+ (item.score*10));
+        storageArr.sort((a, b) => {
+            if(a.score < b.score){return 1}
+            else{return -1}})
+        storageArr.forEach(function(item, index) {
+            var stats = $('<p>').text((index+1)+'.   '+item.userInitial+' - '+ (item.score*10));
             $("#quiz-box").append(scoreBoardTitle,scoreBoard.append(stats));
+            
         });
     }
     else{
@@ -123,16 +149,20 @@ function HighScoreBoard() {
         $("#quiz-box").append(scoreBoardTitle,scoreBoard.append(stats));
     }
     var goBackBtn = $('<button>').addClass('go-back').text('Go Back');
-    var clearBtn = $('<button>').addClass('clear-highscores').text('Clear Highscores');
-    var navButtons = $('<div>');
+    var clearBtn = $('<button>').addClass('clear-scores').text('Clear Scores');
+    var navButtons = $('<div class="buttons">');
     $("#quiz-box").append(navButtons.append(goBackBtn,clearBtn));
 }
 
-//start button click event
+//start quiz button click event
 $("#quiz-box").on('click', '.start' , function(event) {
+    iteration = 0;
+    score = 0;
+    time= 90;
+    loop=true;
     event.preventDefault();
     countDown('start');
-    generateQuestion();
+    generateQuestion(loop);
 });
 
 //submit button click event
@@ -165,16 +195,15 @@ $("#quiz-box").on('click', '.choice-option' , function(event) {
     if (selectedAnswer == correctAnwser) {
         result.text('Correct!');
         score++;
-        time+=20;
     } else {
         result.text('Wrong...');
-        time-=15
+        countDown('minus');
     }
 
     //checks to see if there are more questions, if not display resultPage
     if (iteration<questions.length-1){
         iteration++;
-        generateQuestion();
+        generateQuestion(loop);
     }
     else{
         removeContent();
@@ -199,7 +228,7 @@ $('#header').on('click', '.highscore' , function(event) {
 //go back button click event
 $('#quiz-box').on('click', '.go-back' , function(event) {
     event.preventDefault();
-    removeContent()
+    removeContent();
     homePage();
 });
 
