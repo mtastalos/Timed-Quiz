@@ -1,15 +1,16 @@
 //array of question objects
 var questions =[
-    {question:"This is the question 1 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 2 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 3 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 4 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 5 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 6 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 7 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 8 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 9 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1},
-    {question:"This is the question 10 text", choices:["Option1", "Option2", "Option3", "Option4"], answer:1}
+    //	&lt;	&gt;
+    {question:"Which tag marks the start of an html document?", choices:["&lt;html&gt;", "&lt;body&gt;", "&lt;header&gt;", "&lt;head&gt;"], answer:0},
+    {question:"What tag is uses to indicate a new line?", choices:["An empty &lt;p&gt; tag", "&lt;/break&gt", "An empty &lt;div&gt", "&lt;/br&gt"], answer:3},
+    {question:"Which character is used to indicate an end tag?", choices:["]", ")", "'", "/"], answer:3},
+    {question:"A boolean can be either ____", choices:["Yes/No", "True/False", "Correct/False", "True/Null"], answer:1},
+    {question:"Which element would you use to implement JavaScript into your HTML from an external JS file?", choices:["&lt;link&gt", "&lt;source&gt", "&lt;script&gt", "All the above"], answer:2},
+    {question:"Which element can you write text in?", choices:["&lt;div&gt", "&lt;h1&gt", "&lt;p&gt", "All the above"], answer:3},
+    {question:"To change the text found on the browser's tab, which element would you use?", choices:["&lt;head&gt", "&lt;header&gt", "&lt;title&gt", "&lt;name&gt"], answer:2},
+    {question:"CSS or Cascading Style Sheets will execute from ____", choices:["Top to bottom", "Right to left", "Left to right", "None of the above"], answer:0},
+    {question:"'*', '=', '+', and '-' are examples of ____ in JavaScript", choices:["Operators", "Math", "Characters", "Symbols"], answer:0},
+    {question:"for(i=0;i<=10;i++){console.log('i') \n What will the console display}", choices:["It will display i incrementally number 9 times", "Run into an error", "It will display the same number 10 times", "It will display i incrementally number 10 times"], answer:3}
 ];
 
 var content = document.querySelector("#quiz-box");
@@ -195,16 +196,19 @@ $('#header').on('click', '.highscore' , function(event) {
     HighScoreBoard();
 });
 
+//go back button click event
 $('#quiz-box').on('click', '.go-back' , function(event) {
     event.preventDefault();
     removeContent()
     homePage();
 });
 
+//clear local storage click event 
 $('#quiz-box').on('click', '.clear-highscores' , function(event) {
     event.preventDefault();
     localStorage.clear();
     HighScoreBoard();
 
 });
+
 homePage();
