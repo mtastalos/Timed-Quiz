@@ -14,13 +14,14 @@ header {
     height: 100px;
     padding: 20px;
 }
+
+/* quiz elements  */
 .quiz-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 100px;
 }
-
 .quiz{
     width: 65%;
     height: auto;
@@ -29,19 +30,16 @@ header {
     justify-content: center;
     align-items: center;
 }
-
 .quiz p{
     font-size: 25px;
     text-align: center;
     margin: 10px;
     vertical-align: center;
 }
-
 .quiz h1, .quiz h3, .quiz h4 {
     font-size: 45px;
     margin: 0px 0px 20px 5px;
 }
-
 .quiz h2 {
     font-size: 30px;
     margin: 0px 0px 20px 5px;
@@ -52,13 +50,14 @@ header {
     flex-direction: column;
     align-items: flex-start;
 }
-
 .quiz .choices-container .choice-option {
     width: auto;
     height: 50px;
 
 }
+/* end of quiz elements */
 
+/* correct/wrong answer results */
 .answer-result {
     width: 65%;
     font-size: 25px;
@@ -69,6 +68,7 @@ header {
     font-weight: bold;
 }
 
+/* score board elements */
 .scoreboard {
     width: 45%;
     margin-bottom: 10px;
@@ -78,11 +78,12 @@ header {
     margin: 0;
     background-color: rgba(205, 121, 231, 0.55);
 }
-
 .scoreboard p:nth-child(2n){
     background-color: rgba(114, 26, 141, 0.55);
 }
+/* end of score board elements */
 
+/*  button elements */
 button {
     padding: 0.1em 1.2em;
     margin: 5px 10px 0.1em 10px;
@@ -98,21 +99,21 @@ button {
     text-align: center;
     transition: all 0.2s;
 }
-
 button:hover{
     border-color: rgba(48,48,33,.75);
     background-color: violet;
 }
 
+/* --header scorboard button-- */
 .highscore {
     background: transparent;
     box-shadow: 0px 0px 0px transparent;
     text-shadow: 0px 0px 0px transparent;
     color: violet;
 }
-
 .highscore:hover {
     border-color: transparent;
     background-color: transparent;
     color: blueviolet;
 }
+/* end of button elements  */

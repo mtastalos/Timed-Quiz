@@ -1,6 +1,5 @@
 //array of question objects
 var questions =[
-    //	&lt;	&gt;
     {question:"Which tag marks the start of an html document?", choices:["&lt;html&gt;", "&lt;body&gt;", "&lt;header&gt;", "&lt;head&gt;"], answer:0},
     {question:"What tag is uses to indicate a new line?", choices:["An empty &lt;p&gt; tag", "&lt;/break&gt", "An empty &lt;div&gt", "&lt;/br&gt"], answer:3},
     {question:"Which character is used to indicate an end tag?", choices:["]", ")", "'", "/"], answer:3},
@@ -13,8 +12,6 @@ var questions =[
     {question:"for(i=0;i<=10;i++){console.log('i')}    What will the console display?", choices:["It will display i incrementally number 9 times", "Run into an error", "It will display the same number 10 times", "It will display i incrementally 10 times"], answer:3}
 ];
 
-var content = document.querySelector("#quiz-box");
-//question iteration 
 var iteration = 0;
 var score = 0;
 var time = 90;
@@ -29,7 +26,8 @@ function homePage() {
     $('.answer-result').remove();
     var homeScreen = $(
         '<h1>Coding Quiz Challenge</h1>'+
-        '<p>You are about to start a timed quiz that will have question coding related!</p>'+
+        '<p>You are about to start a timed quiz that will have questions pertaining to coding. During this quiz you will only have 90 seconds to answer all ten questions. '+
+        'Wrong answers will descrease the remaining time so make sure to answer them quickly but also accurately! When you are ready click the button below to start the quiz.</p>'+
         '<button class="start">Start Quiz!</button>'
         );
     $("#quiz-box").append(homeScreen);
@@ -37,6 +35,7 @@ function homePage() {
 
 //High scores (link in head)
 function displayHighscoreLink(display){
+    //--this will remove button from header when viewing the scoreboard
     if (display){
         $('.highscore').text('View High Scores');
     }
@@ -52,7 +51,7 @@ function countDown(controller){
             if(time<0){
                 removeContent();
                 resultsPage();
-                window.alert("BZZZZz! You ran out of time!");
+                window.alert("BZZZZ! You ran out of time!");
                 clearInterval(timer);
             }
             else{
@@ -84,12 +83,12 @@ function countDown(controller){
     }
 }
 
-//removes current content in quiz-box
+//removes current content in quiz-box div
 function removeContent(){
+    var content = document.querySelector("#quiz-box");
     while(content.firstChild){
         content.removeChild(content.firstChild);
     }
-
 }
 
 //Question page
@@ -128,45 +127,50 @@ function resultsPage() {
 
 //High scores page
 function HighScoreBoard() {
+    //--removes current content, score board link, and timer.
     removeContent();
     countDown('clear');
     displayHighscoreLink(false);
     var scoreBoard = $('<div class="scoreboard">');
     var scoreBoardTitle = $('<h4 class="scoreboardTitle">').text('High Scores');
+    //--check for localStorage, then displays them based on score (highest to lowiest). If no scores are found display message
     if(localStorage.getItem('scores')!=null){
         storageArr = JSON.parse(localStorage.getItem('scores'));
         storageArr.sort((a, b) => {
             if(a.score < b.score){return 1}
             else{return -1}})
         storageArr.forEach(function(item, index) {
-            var stats = $('<p>').text((index+1)+'.   '+item.userInitial+' - '+ (item.score*10));
+            var stats = $('<p>').text((index+1)+'. '+item.userInitial+' - '+ (item.score*10));
             $("#quiz-box").append(scoreBoardTitle,scoreBoard.append(stats));
             
         });
     }
     else{
-        var stats = $('<p>').text('Currently no stats available, you can be the fist! Take the quiz and then come back here.');
+        var stats = $('<p>').text('Currently no stats available, but you can be the first! Take the quiz and then come back here.');
         $("#quiz-box").append(scoreBoardTitle,scoreBoard.append(stats));
     }
+    //--adds buttons to go back to home or to clear score board 
     var goBackBtn = $('<button>').addClass('go-back').text('Go Back');
     var clearBtn = $('<button>').addClass('clear-scores').text('Clear Scores');
     var navButtons = $('<div class="buttons">');
     $("#quiz-box").append(navButtons.append(goBackBtn,clearBtn));
 }
 
-//start quiz button click event
+//Start quiz button click event
 $("#quiz-box").on('click', '.start' , function(event) {
+    //--resets varialbes 
+    event.preventDefault();
     iteration = 0;
     score = 0;
     time= 90;
-    loop=true;
-    event.preventDefault();
+    loop=true; 
     countDown('start');
     generateQuestion(loop);
 });
 
-//submit button click event
+//Submit results button click event
 $("#quiz-box").on('click', '.submit' , function(event) {
+    //--checks initial's value, then stores value with score as an object in an array
     event.preventDefault();   
     if($('#initials').val().trim().length!=3){
         window.alert("Please enter in only three characters for the scoreboard.")
@@ -176,20 +180,19 @@ $("#quiz-box").on('click', '.submit' , function(event) {
     if(localStorage.getItem('scores')!=null){
         highscores = JSON.parse(localStorage.getItem('scores'));
     }
-    var userInitial = $('#initials').val().trim();
+    var userInitial = $('#initials').val().trim().toUpperCase();
     highscores.push({userInitial,score});
     localStorage.setItem('scores', JSON.stringify(highscores));
     HighScoreBoard()
 });
 
-//question answer button click event
+//Question option button click event
 $("#quiz-box").on('click', '.choice-option' , function(event) {
     event.preventDefault();   
-    //creates containers for results
     var resultContainer = $('<div class="answer-result">');
     var result = $('<p>');
 
-    //grabs answer selected and checks to see if it's correct
+    //--grabs answer selected and checks to see if it's correct
     var selectedAnswer = $(this).attr('data-question-option');
     var correctAnwser = questions[iteration].answer;
     if (selectedAnswer == correctAnwser) {
@@ -200,7 +203,7 @@ $("#quiz-box").on('click', '.choice-option' , function(event) {
         countDown('minus');
     }
 
-    //checks to see if there are more questions, if not display resultPage
+    //--loops through question arraym then display result page
     if (iteration<questions.length-1){
         iteration++;
         generateQuestion(loop);
@@ -210,14 +213,13 @@ $("#quiz-box").on('click', '.choice-option' , function(event) {
         countDown("stop");
         resultsPage();
     }    
-    //inplace to avoid error, can't delete something that doesn't exist
     $('.answer-result').remove();
-    //adds created content to form
     $(".quiz-container").append(resultContainer.append(result));  
 });
 
-//high score button click event
+//High score button click event
 $('#header').on('click', '.highscore' , function(event) {
+    //--navigates to score board page
     event.preventDefault();
     displayHighscoreLink(false);
     $('.answer-result').remove();
@@ -225,15 +227,17 @@ $('#header').on('click', '.highscore' , function(event) {
     HighScoreBoard();
 });
 
-//go back button click event
+//Go back button click event
 $('#quiz-box').on('click', '.go-back' , function(event) {
+    //--navigate back to home page
     event.preventDefault();
     removeContent();
     homePage();
 });
 
-//clear local storage click event 
-$('#quiz-box').on('click', '.clear-highscores' , function(event) {
+//Clear score button click event 
+$('#quiz-box').on('click', '.clear-scores' , function(event) {
+    //--clears local storage 
     event.preventDefault();
     localStorage.clear();
     HighScoreBoard();
