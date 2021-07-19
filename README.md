@@ -11,7 +11,7 @@ Practice generating HTML elements using JQuery.
 * JQuery
 
 ## Website
-https://mtastalos.github.io/Strong-Password-Generator/
+https://mtastalos.github.io/Timed-Quiz/
 
  ![](assets/images/homepage.jpg)
  ![](assets/images/questions.jpg)
