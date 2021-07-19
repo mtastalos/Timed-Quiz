@@ -71,11 +71,12 @@ header {
 /* score board elements */
 .scoreboard {
     width: 45%;
-    margin-bottom: 10px;
-    border: 4px dotted black;
+    padding: 5px;
 }
 .scoreboard p{
     margin: 0;
+    padding: 0 0 0 15px;
+    text-align: left;
     background-color: rgba(205, 121, 231, 0.55);
 }
 .scoreboard p:nth-child(2n){
