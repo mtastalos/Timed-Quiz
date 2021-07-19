@@ -1,5 +1,5 @@
 # Timed-Quiz
-This will generate the user a password  depending on the specified length and selected parameters from the user. 
+This will simulate a multiple choice timed quiz.
 
 ## Goal
 Practice generating HTML elements using JQuery.
